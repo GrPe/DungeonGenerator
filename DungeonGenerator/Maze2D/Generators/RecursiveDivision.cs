@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
-    public class RecursiveDivision : IGenerator<Cell>
+    public sealed class RecursiveDivision : IGenerator<Cell>
     {
         Maze<Cell> maze;
         Random random;

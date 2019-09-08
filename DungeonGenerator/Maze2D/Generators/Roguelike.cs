@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
-    public class Roguelike : IGenerator<RoomCell>
+    public sealed class Roguelike : IGenerator<RoomCell>
     {
         private Maze<RoomCell> maze;
         private List<Room> rooms;

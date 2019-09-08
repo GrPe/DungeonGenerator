@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
-    public class HuntAndKill : IGenerator<Cell>
+    public sealed class HuntAndKill : IGenerator<Cell>
     {
         private Maze<Cell> maze;
 

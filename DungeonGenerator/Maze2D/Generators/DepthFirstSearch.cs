@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
-    public class DepthFirstSearch : IGenerator<Cell>
+    public sealed class DepthFirstSearch : IGenerator<Cell>
     {
         private Maze<Cell> maze;
         private Random random;

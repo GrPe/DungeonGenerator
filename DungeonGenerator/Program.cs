@@ -1,4 +1,5 @@
 ﻿using DungeonGenerator.Maze2D;
+using DungeonGenerator.Maze2D.Cells;
 using DungeonGenerator.Maze2D.Converters;
 using DungeonGenerator.Maze2D.Generators;
 using System;
@@ -14,7 +15,7 @@ namespace DungeonGenerator
         static void Main(string[] args)
         {
 
-            var gen = new DepthFirstSearch();
+            var gen = new Roguelike();
             //gen.SetRoomSize(4, 8);
 
             var m = gen.Generate(50, 50);

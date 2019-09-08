@@ -45,10 +45,12 @@
   <ItemGroup>
     <Compile Include="Maze2D\Cells\Cell.cs" />
     <Compile Include="Maze2D\Cells\ICell.cs" />
+    <Compile Include="Maze2D\Cells\KruskalCell.cs" />
     <Compile Include="Maze2D\Converters\Converter.cs" />
     <Compile Include="Maze2D\Generators\DepthFirstSearch.cs" />
     <Compile Include="Maze2D\Direction.cs" />
     <Compile Include="Maze2D\Generators\HuntAndKill.cs" />
+    <Compile Include="Maze2D\Generators\Kruskal.cs" />
     <Compile Include="Maze2D\Generators\RecursiveDivision.cs" />
     <Compile Include="Maze2D\Generators\Roguelike.cs" />
     <Compile Include="Maze2D\IGenerator.cs" />

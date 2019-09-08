@@ -11,7 +11,7 @@ namespace DungeonGenerator.Maze2D.Converters
         /// </summary>
         /// <param name="maze"></param>
         /// <returns></returns>
-        public static bool[,] ToBoolArray(Maze<Cell> maze)
+        public static bool[,] ToBoolArray<T>(Maze<T> maze) where T : Cell, new()
         {
             bool[,] ret = new bool[maze.Width * 2, maze.Height * 2];
 

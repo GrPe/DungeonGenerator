@@ -15,15 +15,20 @@ namespace DungeonGenerator
         static void Main(string[] args)
         {
 
-            var gen = new Roguelike();
+            var gen = new BacteriaSpread();
             //gen.SetRoomSize(4, 8);
 
             var m = gen.Generate(50, 50);
 
             var maze = Converter.ToBoolArray(m);
 
-            for(int i = 0; i < maze.GetLength(1); i++)
+            for (int i = 0; i < maze.GetLength(0) + 1; i++)
+                Console.Write('x');
+            Console.WriteLine();
+
+            for (int i = 0; i < maze.GetLength(1); i++)
             {
+                Console.Write('x');
                 for (int j = 0; j < maze.GetLength(0); j++)
                     Console.Write((maze[j, i]) ? ' ' : 'x');
                 Console.WriteLine();

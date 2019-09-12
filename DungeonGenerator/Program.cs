@@ -15,10 +15,11 @@ namespace DungeonGenerator
         static void Main(string[] args)
         {
 
-            var gen = new Roguelike();
-            //gen.SetRoomSize(6, 12);
+            var gen = new BinaryTree();
+            //gen.SetRoomSize(3, 6);
+            //gen.SetMaxConnection(2);
 
-            var m = gen.Generate(40, 40);
+            var m = gen.Generate(50, 50);
 
             var maze = Converter.ToBoolArray(m);
 

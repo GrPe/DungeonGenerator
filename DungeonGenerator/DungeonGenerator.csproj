@@ -48,6 +48,7 @@
     <Compile Include="Maze2D\Cells\KruskalCell.cs" />
     <Compile Include="Maze2D\Converters\Converter.cs" />
     <Compile Include="Maze2D\Generators\BacteriaSpread.cs" />
+    <Compile Include="Maze2D\Generators\BinaryTree.cs" />
     <Compile Include="Maze2D\Generators\DepthFirstSearch.cs" />
     <Compile Include="Maze2D\Direction.cs" />
     <Compile Include="Maze2D\Generators\HuntAndKill.cs" />

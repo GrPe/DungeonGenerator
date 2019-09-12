@@ -11,6 +11,8 @@ namespace DungeonGenerator.Maze2D.Generators
     {
         private Maze<RoomCell> maze;
         private List<Room> rooms;
+        private Random random;
+
         public int MinRoomSize { get; private set; }
         public int MaxRoomSize { get; private set; }
         public int Padding { get; private set; }
@@ -21,7 +23,7 @@ namespace DungeonGenerator.Maze2D.Generators
             MinRoomSize = 4;
             MaxRoomSize = 8;
             Padding = 1;
-            MaxConnection = 4;
+            MaxConnection = 2;
         }
 
         public void SetRoomSize(int min, int max)
@@ -35,34 +37,34 @@ namespace DungeonGenerator.Maze2D.Generators
             Padding = padding;
         }
 
+        public void SetMaxConnection(int max)
+        {
+            if (max < 1) return;
+            MaxConnection = max;
+        }
+
         public Maze<RoomCell> Generate(int x, int y) => Generate(x, y, 300);
 
-        public Maze<RoomCell> Generate(int x, int y, int attemptions)
+        public Maze<RoomCell> Generate(int x, int y, int density)
         {
             maze = new Maze<RoomCell>(x, y);
             rooms = new List<Room>();
+            random = new Random();
 
-            PlaceRooms(attemptions);
+            InsertRooms(density);
             ConnectRooms();
-
-            foreach (var r in rooms)
-                if (r.Connections.Count == 0)
-                    Console.WriteLine(r.Id);
 
             PrepareMaze();
 
             return maze;
         }
 
-        private void PlaceRooms(int attemptions)
+        private void InsertRooms(int density)
         {
-            Random random = new Random();
             Room room = null;
 
             bool replaced = false;
-
-            Position maxPosition = new Position(maze.Width - MaxRoomSize - 1, maze.Height - MaxRoomSize - 1);
-            int attemption = attemptions;
+            int attemption = density;
 
             while (attemption >= 0)
             {
@@ -75,6 +77,7 @@ namespace DungeonGenerator.Maze2D.Generators
 
                 replaced = false;
 
+                //collision detection
                 foreach (var r in rooms)
                 {
                     if (room.Position.X < r.Position.X + r.Width + 1 &&
@@ -92,38 +95,28 @@ namespace DungeonGenerator.Maze2D.Generators
                 if (!replaced)
                 {
                     rooms.Add(room);
-                    attemption = attemptions;
+                    attemption = density;
                 }
             }
         }
 
         private void ConnectRooms()
         {
-            Random random = new Random();
+            List<Pair<Room>> connections = new List<Pair<Room>>();
 
             for (int i = 0; i < rooms.Count; i++)
             {
                 var neighbors = GetNearestNeighbors(rooms[i], i + 1);
+                connections.AddRange(neighbors);
+            }
 
-                int maxConnection = random.Next(1, MaxConnection);
-
-                foreach (var r in neighbors)
-                {
-                    if (rooms[i].Connections.Count < maxConnection)
-                    {
-                        if (rooms[i].Connections.FindIndex(x => x == r.Id) < 0 && r.Connections.Count < MaxConnection)
-                        {
-                            rooms[i].Connections.Add(r.Id);
-                            r.Connections.Add(rooms[i].Id);
-                        }
-                    }
-                    else
-                        break;
-                }
+            foreach (var c in connections)
+            {
+                c.First.Connections.Add(c.Second.Id);
             }
         }
 
-        private List<Room> GetNearestNeighbors(Room room, int start)
+        private List<Pair<Room>> GetNearestNeighbors(Room room, int start)
         {
             var neighbors = new List<KeyValuePair<double, Room>>();
 
@@ -133,7 +126,13 @@ namespace DungeonGenerator.Maze2D.Generators
                 neighbors.Add(new KeyValuePair<double, Room>(dist, rooms[i]));
             }
 
-            return (from r in neighbors orderby r.Key ascending select r.Value).Take(5).ToList();
+            var list = (from r in neighbors orderby r.Key ascending select r.Value).Take(random.Next(1, MaxConnection)).ToList();
+
+            List<Pair<Room>> ret = new List<Pair<Room>>();
+            foreach (var n in list)
+                ret.Add(new Pair<Room> { First = room, Second = n });
+
+            return ret;
         }
 
         private double GetDistance(Room r1, Room r2)
@@ -164,14 +163,11 @@ namespace DungeonGenerator.Maze2D.Generators
                 }
             }
 
-            Random random = new Random();
-
             //draw paths
             foreach (var r in rooms)
             {
                 foreach (var id in r.Connections)
                 {
-                    if (r.Id > id) continue;
                     Position direction = rooms[id].Center - r.Center;
 
                     while(direction.X != 0 || direction.Y != 0)
@@ -205,5 +201,11 @@ namespace DungeonGenerator.Maze2D.Generators
                 }
             }
         }
+    }
+
+    internal sealed class Pair<T>
+    {
+        public T First { get; set; }
+        public T Second { get; set; }
     }
 }

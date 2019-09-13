@@ -1,6 +1,7 @@
 ﻿using DungeonGenerator.Maze2D.Cells;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
@@ -16,16 +17,16 @@ namespace DungeonGenerator.Maze2D.Generators
 
             //create list of connections
             int currentColor = 1;
-            for(int i = 0; i < maze.Width; i++)
+
+            foreach(var cell in maze.Get())
             {
-                for(int j = 0; j < maze.Height; j++)
-                {
-                    maze[i, j].Visited = true;
-                    maze[i, j].Color = currentColor;
-                    currentColor++;
-                    if (i < maze.Width - 1) walls.Add(new Pair { First = new Position(i, j), Second = new Position(i + 1, j) });
-                    if (j < maze.Height - 1) walls.Add(new Pair { First = new Position(i, j), Second = new Position(i, j + 1) });
-                }
+                cell.Visited = true;
+                cell.Color = currentColor++;
+
+                Position left = cell.GetRightNeighbor(maze.Width);
+                Position bottom = cell.GetBottomNeighbor(maze.Height);
+                if (left != null) walls.Add(new Pair { First = cell, Second = maze[left] });
+                if (bottom != null) walls.Add(new Pair { First = cell, Second = maze[bottom] });
             }
 
             Random random = new Random();
@@ -36,21 +37,10 @@ namespace DungeonGenerator.Maze2D.Generators
                 Pair wall = walls[selected];
                 walls.RemoveAt(selected);
 
-                if (maze[wall.First].Color == maze[wall.Second].Color) continue;
-
-                //left-right
-                if(wall.First.X < wall.Second.X)
-                {
-                    maze[wall.First].InsertConnection(Direction.Right);
-                    maze[wall.Second].InsertConnection(Direction.Left);
-                    RecolorMaze(wall);
-                }
-                else //top - down
-                {
-                    maze[wall.First].InsertConnection(Direction.Bottom);
-                    maze[wall.Second].InsertConnection(Direction.Top);
-                    RecolorMaze(wall);
-                }
+                if (wall.First.Color == wall.Second.Color) continue;
+                
+                wall.First.Connect(wall.Second);
+                RecolorMaze(wall);
             }
 
             return maze;
@@ -58,30 +48,30 @@ namespace DungeonGenerator.Maze2D.Generators
 
         private void RecolorMaze(Pair connection)
         {
-            Queue<Position> cells = new Queue<Position>();
+            Queue<KruskalCell> cells = new Queue<KruskalCell>();
             cells.Enqueue(connection.First);
-            int color = maze[connection.First].Color;
+            int color = connection.First.Color;
 
             while(cells.Count > 0)
             {
-                Position position = cells.Dequeue();
-                maze[position].Color = color;
+                KruskalCell cell = cells.Dequeue();
+                cell.Color = color;
 
-                if(maze[position].Left && maze[position.X - 1, position.Y].Color != color)
-                    cells.Enqueue(new Position(position.X - 1, position.Y));
-                if (maze[position].Right && maze[position.X + 1, position.Y].Color != color)
-                    cells.Enqueue(new Position(position.X + 1, position.Y));
-                if (maze[position].Top && maze[position.X, position.Y - 1].Color != color)
-                    cells.Enqueue(new Position(position.X, position.Y - 1));
-                if (maze[position].Bottom && maze[position.X, position.Y + 1].Color != color)
-                    cells.Enqueue(new Position(position.X, position.Y + 1));
+                if (cell.Left && maze[cell.GetLeftNeighbor()].Color != color)
+                    cells.Enqueue(maze[cell.GetLeftNeighbor()]);
+                if (cell.Right && maze[cell.GetRightNeighbor(maze.Width)].Color != color)
+                    cells.Enqueue(maze[cell.GetRightNeighbor(maze.Width)]);
+                if (cell.Top && maze[cell.GetTopNeighbor()].Color != color)
+                    cells.Enqueue(maze[cell.GetTopNeighbor()]);
+                if (cell.Bottom && maze[cell.GetBottomNeighbor(maze.Height)].Color != color)
+                    cells.Enqueue(maze[cell.GetBottomNeighbor(maze.Height)]);
             }
         }
     }
 
     internal sealed class Pair
     {
-        public Position First { get; set; }
-        public Position Second { get; set; }
+        public KruskalCell First { get; set; }
+        public KruskalCell Second { get; set; }
     }
 }

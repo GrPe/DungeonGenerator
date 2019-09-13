@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DungeonGenerator.Maze2D.Cells
 {
@@ -82,6 +84,17 @@ namespace DungeonGenerator.Maze2D.Cells
         {
             if (Position.Y == mazeHeight - 1) return null;
             return new Position(Position.X, Position.Y + 1);
+        }
+
+        public List<Position> GetAllNeighbors(int w, int h)
+        {
+            return new List<Position>
+            {
+                GetBottomNeighbor(h),
+                GetTopNeighbor(),
+                GetRightNeighbor(w),
+                GetLeftNeighbor()
+            }.Where(n => n != null).ToList();
         }
 
         [Obsolete()]

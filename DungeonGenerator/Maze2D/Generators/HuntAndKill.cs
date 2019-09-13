@@ -20,87 +20,41 @@ namespace DungeonGenerator.Maze2D.Generators
             maze[current].Visited = true;
 
             int mazeSize = x * y - 1;
-            while(mazeSize > 0)
+            while (mazeSize > 0)
             {
-                var neighbors = GetUnvisitedNeighbors(current);
+                var neighbors = maze[current].GetAllNeighbors(maze.Width, maze.Height).Where(n => !maze[n].Visited).ToList();
 
                 if (neighbors.Count == 0)
                 {
-                    Position pos = Hunt();
-                    if (pos != null)
-                    {
-                        current = pos;
-                        neighbors = GetUnvisitedNeighbors(current);
-                    }
-                    else
-                        break;
+                    current = Hunt();
+                    neighbors = maze[current].GetAllNeighbors(maze.Width, maze.Height).Where(n => !maze[n].Visited).ToList();
                 }
 
                 neighbors = neighbors.OrderBy(a => random.Next()).ToList();
 
-                switch (neighbors[0])
-                {
-                    case Direction.Bottom:
-                        maze[current].InsertConnection(Direction.Bottom);
-                        current.Y++;
-                        maze[current].InsertConnection(Direction.Top);
-                        maze[current].Visited = true;
-                        break;
-                    case Direction.Top:
-                        maze[current].InsertConnection(Direction.Top);
-                        current.Y--;
-                        maze[current].InsertConnection(Direction.Bottom);
-                        maze[current].Visited = true;
-                        break;
-                    case Direction.Left:
-                        maze[current].InsertConnection(Direction.Left);
-                        current.X--;
-                        maze[current].InsertConnection(Direction.Right);
-                        maze[current].Visited = true;
-                        break;
-                    case Direction.Right:
-                        maze[current].InsertConnection(Direction.Right);
-                        current.X++;
-                        maze[current].InsertConnection(Direction.Left);
-                        maze[current].Visited = true;
-                        break;
-                }
+                maze[current].Connect(maze[neighbors[0]]);
+                current = neighbors[0];
+                maze[current].Visited = true;
+
                 mazeSize--;
             }
 
             return maze;
         }
 
-        private List<Direction> GetUnvisitedNeighbors(Position position)
-        {
-            List<Direction> neighbors = new List<Direction>();
-
-            if (!maze[position].Left && position.X > 0
-                && !maze[position.X - 1, position.Y].Visited) neighbors.Add(Direction.Left);
-            if (!maze[position].Right && position.X < maze.Width - 1
-                && !maze[position.X + 1, position.Y].Visited) neighbors.Add(Direction.Right);
-            if (!maze[position].Top && position.Y > 0
-                && !maze[position.X, position.Y - 1].Visited) neighbors.Add(Direction.Top);
-            if (!maze[position].Bottom && position.Y < maze.Height - 1
-                && !maze[position.X, position.Y + 1].Visited) neighbors.Add(Direction.Bottom);
-
-            return neighbors;
-        }
-
         private Position Hunt()
         {
-
-            for (int i = 0; i < maze.Width; i++)
+            foreach (var cell in maze.Get())
             {
-                for (int j = 0; j < maze.Height; j++)
+                if (maze[cell.Position].Visited)
                 {
-                    if (!maze[i, j].Visited) continue;
-                    if (GetUnvisitedNeighbors(new Position(i, j)).Count > 0)
+                    if (maze[cell.Position].GetAllNeighbors(maze.Width, maze.Height).Where(n => !maze[n].Visited).Count() > 0)
                     {
-                        return new Position(i, j);
+                        return cell.Position;
                     }
                 }
             }
+
             return null;
         }
     }

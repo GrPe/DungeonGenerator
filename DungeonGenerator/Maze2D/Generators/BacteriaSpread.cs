@@ -26,37 +26,16 @@ namespace DungeonGenerator.Maze2D.Generators
             {
                 foreach(Position pos in currentLayer)
                 {
-                    if (pos.X > 0 && (!maze[pos.X - 1, pos.Y].Visited))
+                    var neighbors = maze[pos].GetAllNeighbors(maze.Width, maze.Height);
+
+                    foreach(var n in neighbors)
                     {
-                        maze[pos].InsertConnection(Direction.Left);
-                        var npos = new Position(pos.X - 1, pos.Y);
-                        maze[npos].InsertConnection(Direction.Right);
-                        maze[npos].Visited = true;
-                        nextLayer.Add(npos);
-                    }
-                    if (pos.X < maze.Width - 1 && (!maze[pos.X + 1, pos.Y].Visited))
-                    {
-                        maze[pos].InsertConnection(Direction.Right);
-                        var npos = new Position(pos.X + 1, pos.Y);
-                        maze[npos].InsertConnection(Direction.Left);
-                        maze[npos].Visited = true;
-                        nextLayer.Add(npos);
-                    }
-                    if (pos.Y > 0 && (!maze[pos.X, pos.Y - 1].Visited))
-                    {
-                        maze[pos].InsertConnection(Direction.Top);
-                        var npos = new Position(pos.X, pos.Y - 1);
-                        maze[npos].InsertConnection(Direction.Bottom);
-                        maze[npos].Visited = true;
-                        nextLayer.Add(npos);
-                    }
-                    if (pos.Y < maze.Height - 1 && (!maze[pos.X, pos.Y + 1].Visited))
-                    {
-                        maze[pos].InsertConnection(Direction.Bottom);
-                        var npos = new Position(pos.X, pos.Y + 1);
-                        maze[npos].InsertConnection(Direction.Top);
-                        maze[npos].Visited = true;
-                        nextLayer.Add(npos);
+                        if(!maze[n].Visited)
+                        {
+                            maze[pos].Connect(maze[n]);
+                            maze[n].Visited = true;
+                            nextLayer.Add(n);
+                        }
                     }
                 }
                 currentLayer = nextLayer.OrderBy(p => random.Next()).ToList();

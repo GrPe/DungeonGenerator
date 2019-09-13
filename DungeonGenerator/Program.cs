@@ -15,7 +15,7 @@ namespace DungeonGenerator
         static void Main(string[] args)
         {
 
-            var gen = new BinaryTree();
+            var gen = new BacteriaSpread();
             //gen.SetRoomSize(3, 6);
             //gen.SetMaxConnection(2);
 

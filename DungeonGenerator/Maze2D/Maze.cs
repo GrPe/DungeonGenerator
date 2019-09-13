@@ -1,8 +1,9 @@
 ﻿using DungeonGenerator.Maze2D.Cells;
+using System.Collections.Generic;
 
 namespace DungeonGenerator.Maze2D
 {
-    public class Maze<T> where T : ICell, new()
+    public class Maze<T> where T : Cell, new()
     {
         private T[,] maze;
         public int Width { get; protected set; }
@@ -14,8 +15,16 @@ namespace DungeonGenerator.Maze2D
             Height = height;
             maze = new T[width, height];
 
-            for (int i = 0; i < maze.Length; i++)
-                maze[i / Height, i % Height] = new T();
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    maze[i, j] = new T
+                    {
+                        Position = new Position(i, j)
+                    };
+                }
+            }
         }
 
         public T this[Position position]
@@ -28,6 +37,13 @@ namespace DungeonGenerator.Maze2D
         {
             get => maze[x, y];
             set => maze[x, y] = value;
+        }
+
+        public IEnumerable<T> Get()
+        {
+            for (int i = 0; i < Width; i++)
+                for (int j = 0; j < Height; j++)
+                    yield return maze[i, j];
         }
     }
 }

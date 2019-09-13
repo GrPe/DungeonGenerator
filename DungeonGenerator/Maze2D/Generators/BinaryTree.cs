@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
@@ -12,30 +10,25 @@ namespace DungeonGenerator.Maze2D.Generators
         private Maze<Cell> maze;
         private Random random;
 
-
         public Maze<Cell> Generate(int x, int y)
         {
             maze = new Maze<Cell>(x, y);
             random = new Random();
 
-            for(int i = 0; i < maze.Height; i++)
+            foreach(var cell in maze.Get())
             {
-                for(int j = 0; j < maze.Width; j++)
+                cell.Visited = true;
+
+                List<Position> cells = new List<Position>
                 {
-                    maze[j, i].Visited = true;
-                    if (i == maze.Width - 1 && j == maze.Height - 1)
-                        continue;
-                    else if (i == maze.Width - 1)
-                        maze[j, i].InsertConnection(Direction.Right);
-                    else if (j == maze.Height - 1)
-                        maze[j, i].InsertConnection(Direction.Bottom);
-                    else
-                    {
-                        if (random.Next(0, 2) == 0)
-                            maze[j, i].InsertConnection(Direction.Right);
-                        else
-                            maze[j, i].InsertConnection(Direction.Bottom);
-                    }
+                    cell.GetRightNeighbor(maze.Width),
+                    cell.GetBottomNeighbor(maze.Height)
+                }.Where(n => n != null).ToList();
+
+                if (cells.Count > 0)
+                {
+                    Position pos = cells[random.Next(0, cells.Count)];
+                    cell.Connect(maze[pos]);
                 }
             }
 

@@ -19,11 +19,11 @@ namespace DungeonGenerator
             //gen.SetRoomSize(3, 6);
             //gen.SetMaxConnection(2);
 
-            var m = gen.Generate(50, 50);
+            var m = gen.Generate(30, 20);
 
             var maze = Converter.ToBoolArray(m);
 
-            for (int i = 0; i < maze.GetLength(0) + 1; i++)
+            for (int i = 0; i < m.Width * 2 + 1; i++)
                 Console.Write('x');
             Console.WriteLine();
 

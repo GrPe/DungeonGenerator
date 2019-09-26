@@ -2,6 +2,7 @@
 using DungeonGenerator.Maze2D.Cells;
 using DungeonGenerator.Maze2D.Converters;
 using DungeonGenerator.Maze2D.Generators;
+using DungeonGenerator.Maze2D.Travelsals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,14 @@ namespace DungeonGenerator
         static void Main(string[] args)
         {
 
-            var gen = new Sidewinder();
+            var gen = new DepthFirstSearch();
             //gen.SetRoomSize(3, 6);
             //gen.SetMaxConnection(2);
 
             var m = gen.Generate(30, 20);
+
+            var dijkstra = new DijkstraPathFinder();
+            var path = dijkstra.FindPath(m, new Position(0, 0), new Position(m.Width - 1, m.Height - 1));
 
             var maze = Converter.ToBoolArray(m);
 
@@ -31,10 +35,28 @@ namespace DungeonGenerator
             {
                 Console.Write('x');
                 for (int j = 0; j < maze.GetLength(0); j++)
-                    Console.Write((maze[j, i]) ? ' ' : 'x');
+                {
+                    if (path.FindIndex(p => p.X == j / 2 && p.Y == i /2) >= 0)
+                    {
+                        if(maze[j,i])
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write('^');
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write('x');
+                        }
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write((maze[j, i]) ? ' ' : 'x');
+                    }
+                }
                 Console.WriteLine();
             }
-
         }
     }
 }

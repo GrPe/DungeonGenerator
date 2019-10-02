@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Drawing;
 
 namespace DungeonGenerator
 {
@@ -20,9 +21,9 @@ namespace DungeonGenerator
 
             generator.InitGenerator(new DepthFirstSearch());
 
-            bool[,] mask = LoadFromFile();
+            bool[,] mask = LoadFromBitmap();
 
-            var m = generator.CreateMazeWithMask(10, 5, mask);
+            var m = generator.CreateMazeWithMask(60, 60, mask);
 
             var maze = m.ToBoolArray();
             maze.Display(m.FindPath(new Position(0, 0), new Position(m.Width - 1, m.Height - 1)));
@@ -45,6 +46,27 @@ namespace DungeonGenerator
                 j = 0;
                 i++;
             }
+            return mask;
+        }
+
+        static bool[,] LoadFromBitmap()
+        {
+            bool[,] mask = null;
+
+            using (Bitmap bitmap = new Bitmap("bitmap.bmp"))
+            {
+                mask = new bool[bitmap.Height, bitmap.Width];
+                for(int i = 0; i < bitmap.Height; i++)
+                {
+                    for(int j = 0; j < bitmap.Width; j++)
+                    {
+                        Color color = bitmap.GetPixel(j, i);
+                        if (color.R == 0 && color.G == 0 && color.B == 0)
+                            mask[j, i] = true;
+                    }
+                }
+            }
+
             return mask;
         }
     }

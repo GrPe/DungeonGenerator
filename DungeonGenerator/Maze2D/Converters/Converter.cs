@@ -4,14 +4,7 @@ namespace DungeonGenerator.Maze2D.Converters
 {
     public static class Converter
     {
-        /// <summary>
-        /// Convert Maze to bool array
-        /// true is path, false is wall
-        /// Note: output maze is 4 times bigger
-        /// </summary>
-        /// <param name="maze"></param>
-        /// <returns></returns>
-        public static bool[,] ToBoolArray<T>(Maze<T> maze) where T : Cell, new()
+        public static bool[,] ToBoolArray<T>(this Maze<T> maze) where T : Cell, new()
         {
             bool[,] ret = new bool[maze.Width * 2, maze.Height * 2];
 
@@ -46,7 +39,7 @@ namespace DungeonGenerator.Maze2D.Converters
             return ret;
         }
 
-        public static bool[,] ToBoolArray(Maze<RoomCell> maze)
+        public static bool[,] ToBoolArray(this Maze<RoomCell> maze)
         {
             bool[,] ret = new bool[maze.Width * 2, maze.Height * 2];
 

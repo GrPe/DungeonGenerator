@@ -29,7 +29,7 @@ namespace DungeonGenerator
             var dijkstra = new DijkstraPathFinder();
             var path = dijkstra.FindPath(m, new Position(0, 0), new Position(m.Width - 1, m.Height - 1));
 
-            var maze = Converter.ToBoolArray(m);
+            var maze = m.ToBoolArray();
 
             for (int i = 0; i < m.Width * 2 + 1; i++)
                 Console.Write('x');

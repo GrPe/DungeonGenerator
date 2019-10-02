@@ -8,6 +8,20 @@ namespace DungeonGenerator.Maze2D.Cells
     {
         public Position Position { get; set; }
         public bool Visited { get; set; }
+        private bool locked;
+        public bool Locked
+        {
+            get
+            {
+                return locked;
+            }
+            set
+            {
+                locked = value;
+                Visited = locked;
+            }
+        }
+
         //connections
         public bool Left { get; protected set; }
         public bool Right { get; protected set; }
@@ -64,30 +78,32 @@ namespace DungeonGenerator.Maze2D.Cells
 
         public Position GetLeftNeighbor()
         {
-            if (Position.X == 0) return null;
+            if (Position.X == 0 || Locked) return null;
             return new Position(Position.X - 1, Position.Y);
         }
 
         public Position GetRightNeighbor(int mazeWidth)
         {
-            if (Position.X == mazeWidth - 1) return null;
+            if (Position.X == mazeWidth - 1 || Locked) return null;
             return new Position(Position.X + 1, Position.Y);
         }
 
         public Position GetTopNeighbor()
         {
-            if (Position.Y == 0) return null;
+            if (Position.Y == 0 || Locked) return null;
             return new Position(Position.X, Position.Y - 1);
         }
 
         public Position GetBottomNeighbor(int mazeHeight)
         {
-            if (Position.Y == mazeHeight - 1) return null;
+            if (Position.Y == mazeHeight - 1 || Locked) return null;
             return new Position(Position.X, Position.Y + 1);
         }
 
         public List<Position> GetAllNeighbors(int w, int h)
         {
+            if (Locked) return new List<Position>();
+
             return new List<Position>
             {
                 GetBottomNeighbor(h),

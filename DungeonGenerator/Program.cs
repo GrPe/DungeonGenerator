@@ -26,11 +26,8 @@ namespace DungeonGenerator
 
             var m = generator.CreateMazeWithMask(5, 5, mask);
 
-            var dijkstra = new DijkstraPathFinder();
-            var path = dijkstra.FindPath(m, new Position(0, 0), new Position(m.Width - 1, m.Height - 1));
-
             var maze = m.ToBoolArray();
-            maze.Display(path);
+            maze.Display(m.FindPath(new Position(0, 0), new Position(m.Width - 1, m.Height - 1)));
         }
     }
 }

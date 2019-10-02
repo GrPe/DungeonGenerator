@@ -5,16 +5,22 @@ using System.Linq;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
-    public sealed class DepthFirstSearch : IGenerator<Cell>
+    public sealed class DepthFirstSearch : IGenerator<Cell>, IMaskGenerator<Cell>
     {
         private Maze<Cell> maze;
         private Random random;
 
-        public Maze<Cell> Generate(int x, int y)
+        public Maze<Cell> Generate(int x, int y, Maze<Cell> mask)
         {
-            maze = new Maze<Cell>(x, y);
+            maze = mask;
             random = new Random();
-            Position start = new Position(random.Next(0, x), random.Next(0, y));
+
+            Position start = null;
+            do
+            {
+                start = new Position(random.Next(x), random.Next(y));
+            }
+            while (maze[start].Locked);
 
             Stack<Position> stack = new Stack<Position>();
             maze[start].Visited = true;
@@ -36,6 +42,11 @@ namespace DungeonGenerator.Maze2D.Generators
             }
 
             return maze;
+        }
+
+        public Maze<Cell> Generate(int x, int y)
+        {
+            return Generate(x, y, new Maze<Cell>(x, y));
         }
     }
 }

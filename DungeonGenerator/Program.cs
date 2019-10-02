@@ -17,7 +17,7 @@ namespace DungeonGenerator
         {
             Generator generator = new Generator();
 
-            generator.InitGenerator(new BacteriaSpread());
+            generator.InitGenerator(new DepthFirstSearch());
 
             bool[,] mask = new bool[5, 5];
             mask[1, 0] = true;

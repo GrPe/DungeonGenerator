@@ -18,8 +18,13 @@ namespace DungeonGenerator.Maze2D.Generators
             List<Position> currentLayer = new List<Position>();
             List<Position> nextLayer = new List<Position>();
 
-            Position start = new Position(random.Next(maze.Width), random.Next(maze.Height));
-            while (maze[start].Locked) start = new Position(random.Next(maze.Width), random.Next(maze.Height));
+            Position start = null;
+            do
+            {
+                start = new Position(random.Next(maze.Width), random.Next(maze.Height));
+            }
+            while (maze[start].Locked);
+            
             maze[start].Visited = true;
             currentLayer.Add(start);
 

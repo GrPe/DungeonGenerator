@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DungeonGenerator
 {
@@ -17,17 +18,34 @@ namespace DungeonGenerator
         {
             Generator generator = new Generator();
 
-            generator.InitGenerator(new HuntAndKill());
+            generator.InitGenerator(new DepthFirstSearch());
 
-            bool[,] mask = new bool[5, 5];
-            mask[1, 0] = true;
-            mask[2, 0] = true;
-            mask[3, 0] = true;
+            bool[,] mask = LoadFromFile();
 
-            var m = generator.CreateMazeWithMask(5, 5, mask);
+            var m = generator.CreateMazeWithMask(10, 5, mask);
 
             var maze = m.ToBoolArray();
             maze.Display(m.FindPath(new Position(0, 0), new Position(m.Width - 1, m.Height - 1)));
+        }
+
+        static bool[,] LoadFromFile()
+        {
+            IEnumerable<string> lines = File.ReadLines("mask.txt");
+            bool[,] mask = new bool[lines.FirstOrDefault().Length, lines.Count()];
+
+            int i = 0;
+            int j = 0;
+            foreach (string line in lines)
+            {
+                foreach (char c in line)
+                {
+                    if (c == 'X') mask[j,i] = true;
+                    j++;
+                }
+                j = 0;
+                i++;
+            }
+            return mask;
         }
     }
 }

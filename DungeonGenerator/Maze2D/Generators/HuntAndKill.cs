@@ -7,26 +7,31 @@ using System.Threading.Tasks;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
-    public sealed class HuntAndKill : IGenerator<Cell>
+    public sealed class HuntAndKill : IGenerator<Cell>, IMaskGenerator<Cell>
     {
         private Maze<Cell> maze;
 
-        public Maze<Cell> Generate(int x, int y)
+        public Maze<Cell> Generate(int x, int y, Maze<Cell> mask)
         {
-            maze = new Maze<Cell>(x, y);
+            maze = mask;
             Random random = new Random();
 
-            Position current = new Position(random.Next(0, x), random.Next(0, y));
+            Position current = null;
+            do
+            {
+                current = new Position(random.Next(x), random.Next(y));
+            }
+            while (maze[current].Locked);
             maze[current].Visited = true;
 
-            int mazeSize = x * y - 1;
-            while (mazeSize > 0)
+            while (true)
             {
                 var neighbors = maze[current].GetAllNeighbors(maze.Width, maze.Height).Where(n => !maze[n].Visited).ToList();
 
                 if (neighbors.Count == 0)
                 {
                     current = Hunt();
+                    if (current == null) break;
                     neighbors = maze[current].GetAllNeighbors(maze.Width, maze.Height).Where(n => !maze[n].Visited).ToList();
                 }
 
@@ -35,8 +40,6 @@ namespace DungeonGenerator.Maze2D.Generators
                 maze[current].Connect(maze[neighbors[0]]);
                 current = neighbors[0];
                 maze[current].Visited = true;
-
-                mazeSize--;
             }
 
             return maze;
@@ -56,6 +59,11 @@ namespace DungeonGenerator.Maze2D.Generators
             }
 
             return null;
+        }
+
+        public Maze<Cell> Generate(int x, int y)
+        {
+            return Generate(x, y, new Maze<Cell>(x, y));
         }
     }
 }

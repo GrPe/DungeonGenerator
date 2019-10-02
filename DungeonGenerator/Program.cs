@@ -17,7 +17,7 @@ namespace DungeonGenerator
         {
             Generator generator = new Generator();
 
-            generator.InitGenerator(new DepthFirstSearch());
+            generator.InitGenerator(new HuntAndKill());
 
             bool[,] mask = new bool[5, 5];
             mask[1, 0] = true;

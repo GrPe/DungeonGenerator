@@ -49,7 +49,7 @@
     <Compile Include="Maze2D\Cells\Cell.cs" />
     <Compile Include="Maze2D\Cells\ICell.cs" />
     <Compile Include="Maze2D\Cells\KruskalCell.cs" />
-    <Compile Include="Maze2D\Converters\Converter.cs" />
+    <Compile Include="Maze2D\Utils\Converter.cs" />
     <Compile Include="Maze2D\Generator.cs" />
     <Compile Include="Maze2D\Generators\BacteriaSpread.cs" />
     <Compile Include="Maze2D\Generators\BinaryTree.cs" />
@@ -66,6 +66,7 @@
     <Compile Include="Maze2D\Room.cs" />
     <Compile Include="Maze2D\Cells\RoomCell.cs" />
     <Compile Include="Maze2D\Travelsals\DijkstraPathFinder.cs" />
+    <Compile Include="Maze2D\Utils\Displayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

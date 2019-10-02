@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
-    public sealed class BacteriaSpread : IGenerator<Cell>
+    public sealed class BacteriaSpread : IGenerator<Cell>, IMaskGenerator<Cell>
     {
         private Maze<Cell> maze;
 
-        public Maze<Cell> Generate(int x, int y)
+        public Maze<Cell> Generate(int x, int y, Maze<Cell> mask)
         {
-            maze = new Maze<Cell>(x, y);
+            maze = mask;
             Random random = new Random();
             List<Position> currentLayer = new List<Position>();
             List<Position> nextLayer = new List<Position>();
 
-            Position start = new Position(random.Next(0, maze.Width), random.Next(0, maze.Height));
+            Position start = new Position(random.Next(maze.Width), random.Next(maze.Height));
+            while (maze[start].Locked) start = new Position(random.Next(maze.Width), random.Next(maze.Height));
             maze[start].Visited = true;
             currentLayer.Add(start);
 
@@ -43,6 +44,11 @@ namespace DungeonGenerator.Maze2D.Generators
             }
 
             return maze;
+        }
+
+        public Maze<Cell> Generate(int x, int y)
+        {
+            return Generate(x, y, new Maze<Cell>(x, y));
         }
     }
 }

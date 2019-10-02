@@ -15,9 +15,9 @@ namespace DungeonGenerator.Maze2D.Converters
         {
             bool[,] ret = new bool[maze.Width * 2, maze.Height * 2];
 
-            for (int i = 0; i < maze.Width*  2; i+=2)
+            for (int i = 0; i < maze.Width * 2; i += 2)
             {
-                for (int j = 0; j < maze.Height * 2; j+=2)
+                for (int j = 0; j < maze.Height * 2; j += 2)
                 {
                     if (!maze[i / 2, j / 2].Visited) continue;
                     if (maze[i / 2, j / 2].Bottom && maze[i / 2, j / 2].Right)
@@ -36,6 +36,8 @@ namespace DungeonGenerator.Maze2D.Converters
                         ret[i, j] = true;
                         ret[i + 1, j] = true;
                     }
+                    else if (maze[i / 2, j / 2].Locked)
+                        continue;
                     else
                         ret[i, j] = true;
                 }
@@ -54,7 +56,7 @@ namespace DungeonGenerator.Maze2D.Converters
                 {
                     if (!maze[i / 2, j / 2].Visited) continue;
 
-                    if(maze[i/2, j/2].IsRoom)
+                    if (maze[i / 2, j / 2].IsRoom)
                     {
                         ret[i, j] = true;
                         ret[i + 1, j] = true;
@@ -68,8 +70,8 @@ namespace DungeonGenerator.Maze2D.Converters
                         }
                         if (!maze[i / 2, j / 2].Bottom)
                         {
-                            ret[i , j + 1] = false;
-                            ret[i + 1, j +1 ] = false;
+                            ret[i, j + 1] = false;
+                            ret[i + 1, j + 1] = false;
                         }
                     }
                     else
@@ -93,7 +95,7 @@ namespace DungeonGenerator.Maze2D.Converters
                         else
                             ret[i, j] = true;
                     }
-                   
+
                 }
             }
 

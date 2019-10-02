@@ -1,6 +1,6 @@
 ﻿using DungeonGenerator.Maze2D.Cells;
 
-namespace DungeonGenerator.Maze2D.Converters
+namespace DungeonGenerator.Maze2D.Utils
 {
     public static class Converter
     {

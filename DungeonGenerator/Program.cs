@@ -1,6 +1,6 @@
 ﻿using DungeonGenerator.Maze2D;
 using DungeonGenerator.Maze2D.Cells;
-using DungeonGenerator.Maze2D.Converters;
+using DungeonGenerator.Maze2D.Utils;
 using DungeonGenerator.Maze2D.Generators;
 using DungeonGenerator.Maze2D.Travelsals;
 using System;

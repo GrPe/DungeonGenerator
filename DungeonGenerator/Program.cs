@@ -1,4 +1,4 @@
-﻿using DungeonGenerator.Maze2D;
+using DungeonGenerator.Maze2D;
 using DungeonGenerator.Maze2D.Cells;
 using DungeonGenerator.Maze2D.Utils;
 using DungeonGenerator.Maze2D.Generators;
@@ -17,21 +17,25 @@ namespace DungeonGenerator
     {
         static void Main(string[] args)
         {
-            Generator generator = new Generator();
+            //Generator generator = new Generator();
 
-            generator.InitGenerator(new DepthFirstSearch());
+            //generator.InitGenerator(new DepthFirstSearch());
 
-            bool[,] mask = LoadFromBitmap();
+            //bool[,] mask = LoadFromBitmap("bitmap.bmp");
 
-            var m = generator.CreateMazeWithMask(60, 60, mask);
+            //var m = generator.CreateMazeWithMask(60, 60, mask);
 
-            var maze = m.ToBoolArray();
-            maze.Display(m.FindPath(new Position(0, 0), new Position(m.Width - 1, m.Height - 1)));
+            //var maze = m.ToBoolArray();
+            //maze.Display(m.FindPath(new Position(0, 0), new Position(m.Width - 1, m.Height - 1)));
+
+            MazeWithRooms gen = new MazeWithRooms();
+            var maze = gen.Generate(40, 40, new DepthFirstSearch(), 20);
+            maze.ToBoolArray().Display();
         }
 
-        static bool[,] LoadFromFile()
+        static bool[,] LoadFromFile(string fileName)
         {
-            IEnumerable<string> lines = File.ReadLines("mask.txt");
+            IEnumerable<string> lines = File.ReadLines(fileName);
             bool[,] mask = new bool[lines.FirstOrDefault().Length, lines.Count()];
 
             int i = 0;
@@ -49,11 +53,11 @@ namespace DungeonGenerator
             return mask;
         }
 
-        static bool[,] LoadFromBitmap()
+        static bool[,] LoadFromBitmap(string fileName)
         {
             bool[,] mask = null;
 
-            using (Bitmap bitmap = new Bitmap("bitmap.bmp"))
+            using (Bitmap bitmap = new Bitmap(fileName))
             {
                 mask = new bool[bitmap.Height, bitmap.Width];
                 for(int i = 0; i < bitmap.Height; i++)

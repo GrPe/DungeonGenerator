@@ -1,9 +1,7 @@
 ﻿using DungeonGenerator.Maze2D.Cells;
+using DungeonGenerator.Maze2D.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
@@ -11,6 +9,7 @@ namespace DungeonGenerator.Maze2D.Generators
     {
         private Maze<Cell> maze;
         private Random random;
+        List<Room> rooms;
 
         public int MinRoomSize { get; private set; }
         public int MaxRoomSize { get; private set; }
@@ -28,27 +27,26 @@ namespace DungeonGenerator.Maze2D.Generators
             MaxRoomSize = max;
         }
 
-        public Maze<Cell> Generate(int x, int y, IMaskGenerator<Cell> generator, int density = 500)
+        public void Generate(int x, int y, int density = 500)
         {
             maze = new Maze<Cell>(x, y);
             random = new Random();
+            DepthFirstSearch generator = new DepthFirstSearch();
 
             CreateRooms(density);
             maze = generator.Generate(x, y, maze);
-
-            return maze;
         }
 
         private void CreateRooms(int density)
         {
-            List<Room> rooms = new List<Room>();
+            rooms = new List<Room>();
             Room room = null;
 
             int attemption = density;
 
             do
             {
-                room = new Room(rooms.Count, random.Next(MinRoomSize, MaxRoomSize), random.Next(MinRoomSize, MaxRoomSize));
+                room = new Room(random.Next(MinRoomSize, MaxRoomSize), random.Next(MinRoomSize, MaxRoomSize));
                 room.SetPosition(random.Next(1, maze.Width), random.Next(1, maze.Height));
 
                 if (room.Position.X + room.Width >= maze.Width ||
@@ -91,6 +89,50 @@ namespace DungeonGenerator.Maze2D.Generators
                     maze[i, j].Locked = true;
                 }
             }
+        }
+
+        public Maze<Cell> GetMaze()
+        {
+            return maze;
+        }
+
+        public bool[,] GetMazeAsBoolArray()
+        {
+            bool[,] ret = maze?.ToBoolArray();
+
+            foreach (var room in rooms)
+            {
+                for (int i = room.Position.X * 2; i < room.Position.X * 2 + (room.Width - 1) * 2; i++)
+                {
+                    ret[i, room.Position.Y * 2] = true;
+                    ret[i + 1, room.Position.Y * 2] = true;
+                    ret[i, room.Position.Y * 2 + 1] = true;
+                    ret[i + 1, room.Position.Y * 2 + 1] = true;
+
+                    ret[i, room.Position.Y * 2 + (room.Height - 1) * 2] = true;
+                    ret[i + 1, room.Position.Y * 2 + (room.Height - 1) * 2] = true;
+                }
+
+                for (int i = room.Position.Y * 2 + 1; i < room.Position.Y * 2 + (room.Height - 1) * 2; i++)
+                {
+                    ret[room.Position.X * 2, i] = true;
+                    ret[room.Position.X * 2, i + 1] = true;
+                    ret[room.Position.X * 2 + 1, i] = true;
+                    ret[room.Position.X * 2 + 1, i + 1] = true;
+
+                    ret[room.Position.X * 2 + (room.Width - 1) * 2, i] = true;
+                    ret[room.Position.X * 2 + (room.Width - 1) * 2, i + 1] = true;
+                }
+
+                for (int i = room.Position.X * 2 + 2; i < room.Position.X * 2 + room.Width * 2 - 2; i++)
+                {
+                    for (int j = room.Position.Y * 2 + 2; j < room.Position.Y * 2 + room.Height * 2 - 2; j++)
+                    {
+                        ret[i, j] = true;
+                    }
+                }
+            }
+            return ret;
         }
     }
 }

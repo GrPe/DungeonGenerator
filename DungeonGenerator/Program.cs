@@ -29,8 +29,8 @@ namespace DungeonGenerator
             //maze.Display(m.FindPath(new Position(0, 0), new Position(m.Width - 1, m.Height - 1)));
 
             MazeWithRooms gen = new MazeWithRooms();
-            var maze = gen.Generate(40, 40, new DepthFirstSearch(), 20);
-            maze.ToBoolArray().Display();
+            gen.Generate(40, 40);
+            gen.GetMazeAsBoolArray().Display();
         }
 
         static bool[,] LoadFromFile(string fileName)

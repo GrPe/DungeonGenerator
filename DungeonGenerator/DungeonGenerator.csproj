@@ -62,13 +62,11 @@
     <Compile Include="Maze2D\Generators\HuntAndKill.cs" />
     <Compile Include="Maze2D\Generators\IMaskGenerator.cs" />
     <Compile Include="Maze2D\Generators\Kruskal.cs" />
-    <Compile Include="Maze2D\Generators\Roguelike.cs" />
     <Compile Include="Maze2D\Generators\Sidewinder.cs" />
     <Compile Include="Maze2D\Generators\IGenerator.cs" />
     <Compile Include="Maze2D\Maze.cs" />
     <Compile Include="Maze2D\Position.cs" />
     <Compile Include="Maze2D\Room.cs" />
-    <Compile Include="Maze2D\Cells\RoomCell.cs" />
     <Compile Include="Maze2D\Travelsals\DijkstraPathFinder.cs" />
     <Compile Include="Maze2D\Utils\Displayer.cs" />
     <Compile Include="Program.cs" />

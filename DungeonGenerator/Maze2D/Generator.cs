@@ -1,10 +1,6 @@
 ﻿using DungeonGenerator.Maze2D.Cells;
 using DungeonGenerator.Maze2D.Generators;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DungeonGenerator.Maze2D
 {

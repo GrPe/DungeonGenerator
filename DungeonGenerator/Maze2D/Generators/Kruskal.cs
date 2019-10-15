@@ -1,7 +1,6 @@
 ﻿using DungeonGenerator.Maze2D.Cells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DungeonGenerator.Maze2D.Generators
 {

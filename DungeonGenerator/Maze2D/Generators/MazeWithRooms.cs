@@ -49,8 +49,8 @@ namespace DungeonGenerator.Maze2D.Generators
                 room = new Room(random.Next(MinRoomSize, MaxRoomSize), random.Next(MinRoomSize, MaxRoomSize));
                 room.SetPosition(random.Next(1, maze.Width), random.Next(1, maze.Height));
 
-                if (room.Position.X + room.Width >= maze.Width ||
-                    room.Position.Y + room.Height >= maze.Height)
+                if (room.Position.X + room.Width >= (maze.Width) ||
+                    room.Position.Y + room.Height >= (maze.Height))
                     continue;
 
 
@@ -72,6 +72,7 @@ namespace DungeonGenerator.Maze2D.Generators
                 {
                     rooms.Add(room);
                     InsertRoom(room);
+                    AddRandomEntrance(room);
                     attemption = density;
                 }
 
@@ -91,6 +92,42 @@ namespace DungeonGenerator.Maze2D.Generators
             }
         }
 
+        private void AddRandomEntrance(Room room)
+        {
+            int minX = room.Position.X;
+            int minY = room.Position.Y;
+            int maxX = room.Position.X + room.Width - 1;
+            int maxY = room.Position.Y + room.Height - 1;
+
+            int count = random.Next(1, 4);
+            while (count > 0)
+            {
+                Position pos = null;
+                Position neighbor = null;
+                switch (random.Next(4)) //0 - top, 1 - down, 2 - left, 3 - right
+                {
+                    case 0:
+                        pos = new Position(random.Next(minX, maxX), minY);
+                        neighbor = new Position(pos.X, pos.Y - 1);
+                        break;
+                    case 1:
+                        pos = new Position(random.Next(minX, maxX), maxY);
+                        neighbor = new Position(pos.X, pos.Y + 1);
+                        break;
+                    case 2:
+                        pos = new Position(minX, random.Next(minY, maxY));
+                        neighbor = new Position(pos.X - 1, pos.Y);
+                        break;
+                    case 3:
+                        pos = new Position(maxX, random.Next(minY, maxY));
+                        neighbor = new Position(pos.X + 1, pos.Y);
+                        break;
+                }
+                maze[pos].Connect(maze[neighbor]);
+                count--;
+            }
+        }
+
         public Maze<Cell> GetMaze()
         {
             return maze;
@@ -104,29 +141,19 @@ namespace DungeonGenerator.Maze2D.Generators
             {
                 for (int i = room.Position.X * 2; i < room.Position.X * 2 + (room.Width - 1) * 2; i++)
                 {
-                    ret[i, room.Position.Y * 2] = true;
-                    ret[i + 1, room.Position.Y * 2] = true;
-                    ret[i, room.Position.Y * 2 + 1] = true;
-                    ret[i + 1, room.Position.Y * 2 + 1] = true;
-
                     ret[i, room.Position.Y * 2 + (room.Height - 1) * 2] = true;
                     ret[i + 1, room.Position.Y * 2 + (room.Height - 1) * 2] = true;
                 }
 
-                for (int i = room.Position.Y * 2 + 1; i < room.Position.Y * 2 + (room.Height - 1) * 2; i++)
+                for (int i = room.Position.Y * 2; i < room.Position.Y * 2 + (room.Height - 1) * 2; i++)
                 {
-                    ret[room.Position.X * 2, i] = true;
-                    ret[room.Position.X * 2, i + 1] = true;
-                    ret[room.Position.X * 2 + 1, i] = true;
-                    ret[room.Position.X * 2 + 1, i + 1] = true;
-
                     ret[room.Position.X * 2 + (room.Width - 1) * 2, i] = true;
                     ret[room.Position.X * 2 + (room.Width - 1) * 2, i + 1] = true;
                 }
 
-                for (int i = room.Position.X * 2 + 2; i < room.Position.X * 2 + room.Width * 2 - 2; i++)
+                for (int i = room.Position.X * 2; i < room.Position.X * 2 + room.Width * 2 - 2; i++)
                 {
-                    for (int j = room.Position.Y * 2 + 2; j < room.Position.Y * 2 + room.Height * 2 - 2; j++)
+                    for (int j = room.Position.Y * 2; j < room.Position.Y * 2 + room.Height * 2 - 2; j++)
                     {
                         ret[i, j] = true;
                     }

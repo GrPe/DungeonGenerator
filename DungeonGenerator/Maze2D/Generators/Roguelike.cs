@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DungeonGenerator.Maze2D.Generators
 {
-    public class MazeWithRooms
+    public class Roguelike
     {
         private Maze<Cell> maze;
         private Random random;
@@ -15,7 +15,7 @@ namespace DungeonGenerator.Maze2D.Generators
         public int MaxRoomSize { get; private set; }
 
 
-        public MazeWithRooms()
+        public Roguelike()
         {
             MinRoomSize = 4;
             MaxRoomSize = 8;

@@ -28,8 +28,8 @@ namespace DungeonGenerator
             //var maze = m.ToBoolArray();
             //maze.Display(m.FindPath(new Position(0, 0), new Position(m.Width - 1, m.Height - 1)));
 
-            MazeWithRooms gen = new MazeWithRooms();
-            gen.Generate(40, 40);
+            Roguelike gen = new Roguelike();
+            gen.Generate(40, 40, 2000);
             gen.GetMazeAsBoolArray().Display();
         }
 

@@ -51,7 +51,7 @@
     <Compile Include="Maze2D\Cells\Cell.cs" />
     <Compile Include="Maze2D\Cells\ICell.cs" />
     <Compile Include="Maze2D\Cells\KruskalCell.cs" />
-    <Compile Include="Maze2D\Generators\MazeWithRooms.cs" />
+    <Compile Include="Maze2D\Generators\Roguelike.cs" />
     <Compile Include="Maze2D\Travelsals\Travelsal.cs" />
     <Compile Include="Maze2D\Utils\Converter.cs" />
     <Compile Include="Maze2D\Generator.cs" />
